@@ -10,9 +10,20 @@ def get_prices(url):
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, "html.parser")
     
+    price_spans = soup.find_all("span", class_ = "market_listing_price market_listing_price_with_fee")
+    price_list= []
+    for span in price_spans:
+        text = span.text.strip()
+        if text and not text.startswith("Sold"):
+            price_list.append(text)
+        if len(price_list) >= 3:
+            break
+
+    return price_list
+
 def job():
     prices = get_prices(item_url)
-    print("Minimum price: ", prices)
+    for p in prices:
+        print(p)
 
-# İlk çalıştırma
 job()
